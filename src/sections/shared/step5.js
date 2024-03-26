@@ -1,20 +1,17 @@
-import { Button, FormControl, InputLabel, MenuItem, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { Box, Container, Stack } from "@mui/system";
 import CustomButton from "./components/CustomButton";
 import { ThemesShareFormContext } from "./context/themeContext";
-import { useContext, useEffect, useState } from "react";
-import { Calendar } from "primereact/calendar";
+import { useContext } from "react";
 import { useFormik } from "formik";
-import * as Yup from "yup";
+import CustomMobileDatePicker from "./components/CustomMobileDatePicker";
 
-export const Step5 = ({ onPrevious, handleSubmit, formData, setFormData }) => {
+export const Step5 = ({ onPrevious, onNext, setFormData }) => {
   const { theme } = useContext(ThemesShareFormContext);
-  const [date, setDate] = useState(new Date());
-  const [tempDate, setTempDate] = useState(null);
 
   const formik = useFormik({
     initialValues: {
-      Preference_Date: formData.Preference_Date || [],
+      Preference_Date: [],
     },
     onSubmit: (values, helpers) => {
       try {
@@ -22,7 +19,8 @@ export const Step5 = ({ onPrevious, handleSubmit, formData, setFormData }) => {
           ...prevFormData,
           ...values,
         }));
-        // handleSubmit();
+        onNext();
+        //handleSubmit(); está no componente pai
       } catch (error) {
         helpers.setStatus({ success: false });
         helpers.setErrors({ submit: err.message });
@@ -30,21 +28,6 @@ export const Step5 = ({ onPrevious, handleSubmit, formData, setFormData }) => {
       }
     },
   });
-
-  useEffect(() => {
-    formik.setValues((prevValues) => ({
-      ...prevValues,
-      Preference_Date: [tempDate],
-    }));
-    console.log(formik.values);
-  }, [tempDate]);
-
-  const handleDateChange = (e) => {
-    setDate(e.value);
-    const isoDate = e.value.toISOString();
-    setTempDate(isoDate); // Atualize o estado local temporário
-    formik.setFieldValue("Preference_Date", isoDate);
-  };
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -66,16 +49,18 @@ export const Step5 = ({ onPrevious, handleSubmit, formData, setFormData }) => {
           <Stack spacing={2}>
             <Box borderRadius={1} sx={{ p: 2, bgcolor: "white" }}>
               <Typography variant="subtitle1" align="center">
-                A disbonibilidade dos horários vai de acordo com agenda do tatuador
+                Escolha sua data de preferência, a disbonibilidade dos horários vai de acordo com
+                agenda do tatuador
               </Typography>
             </Box>
-            <Calendar
-              value={date}
-              onChange={handleDateChange}
-              inline
-              inputId="dates"
-              dateFormat="dd/mm/yy"
-              selectionMode="single"
+            <CustomMobileDatePicker
+              disablePast
+              label="Data de preferência"
+              onChange={(date) => {
+                if (!date) return;
+                const isoDate = date.toISOString();
+                formik.setFieldValue("Preference_Date", isoDate);
+              }}
             />
           </Stack>
         </Container>

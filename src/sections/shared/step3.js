@@ -101,11 +101,42 @@ export const Step3 = ({ onNext, onPrevious, setFormData, formData }) => {
                 {...formik.getFieldProps("Client_state")}
                 error={formik.touched.Client_state && Boolean(formik.errors.Client_state)}
                 helperText={formik.touched.Client_state && formik.errors.Client_state}
+                MenuProps={{
+                  PaperProps: {
+                    style: {
+                      maxHeight: "200px", // Defina a altura máxima que você deseja
+                      overflow: "auto", // Adicione a barra de rolagem quando o conteúdo exceder a altura máxima
+                    },
+                  },
+                }}
               >
                 <MenuItem value="SP">São Paulo</MenuItem>
                 <MenuItem value="RJ">Rio de Janeiro</MenuItem>
                 <MenuItem value="MG">Minas Gerais</MenuItem>
                 <MenuItem value="ES">Espírito Santo</MenuItem>
+                <MenuItem value="SC">Santa Catarina</MenuItem>
+                <MenuItem value="RS">Rio Grande do Sul</MenuItem>
+                <MenuItem value="PR">Paraná</MenuItem>
+                <MenuItem value="GO">Goiás</MenuItem>
+                <MenuItem value="DF">Distrito Federal</MenuItem>
+                <MenuItem value="MS">Mato Grosso do Sul</MenuItem>
+                <MenuItem value="MT">Mato Grosso</MenuItem>
+                <MenuItem value="RO">Rondônia</MenuItem>
+                <MenuItem value="AC">Acre</MenuItem>
+                <MenuItem value="AM">Amazonas</MenuItem>
+                <MenuItem value="RR">Roraima</MenuItem>
+                <MenuItem value="PA">Pará</MenuItem>
+                <MenuItem value="AP">Amapá</MenuItem>
+                <MenuItem value="TO">Tocantins</MenuItem>
+                <MenuItem value="BA">Bahia</MenuItem>
+                <MenuItem value="SE">Sergipe</MenuItem>
+                <MenuItem value="AL">Alagoas</MenuItem>
+                <MenuItem value="PE">Pernambuco</MenuItem>
+                <MenuItem value="PB">Paraíba</MenuItem>
+                <MenuItem value="RN">Rio Grande do Norte</MenuItem>
+                <MenuItem value="CE">Ceará</MenuItem>
+                <MenuItem value="PI">Piauí</MenuItem>
+                <MenuItem value="MA">Maranhão</MenuItem>
               </CustomSelect>
             </FormControl>
             <CustomTextField

@@ -1,12 +1,13 @@
 import { Box, Container, Stack } from "@mui/system";
 import { ThemesShareFormContext } from "./context/themeContext";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button, Typography } from "@mui/material";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { motion } from "framer-motion";
 
 export const Step6 = ({ onNext, onPrevious }) => {
   const { theme } = useContext(ThemesShareFormContext);
+
   return (
     <div>
       <Box

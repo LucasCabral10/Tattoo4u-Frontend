@@ -1,6 +1,6 @@
 import { LinearProgress, Typography, linearProgressClasses } from "@mui/material";
 import { Box, Container, Stack, styled } from "@mui/system";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { Step1 } from "src/sections/shared/step1";
 import { Step2 } from "src/sections/shared/step2";
 import { Step3 } from "src/sections/shared/step3";
@@ -45,6 +45,11 @@ const Page = (data) => {
 
   useEffect(() => {
     setProgress((step - 2) * 33, 100);
+
+    // Verifica se o step é o último e envia o formulário
+    if (step === 6) {
+      handleSubmit();
+    }
   }, [step]);
 
   const handleNextStep = () => {
@@ -59,7 +64,7 @@ const Page = (data) => {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     console.log(formData);
     let data = new FormData();
 
@@ -84,12 +89,11 @@ const Page = (data) => {
 
     try {
       const response = await axios.post("http://localhost:3333/api/shared/", data, config);
-      setStep(6);
       console.log(response);
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [formData]);
 
   const stepName = [
     "Informações do Tatuador",
@@ -98,6 +102,7 @@ const Page = (data) => {
     "Sobre a tatuagem",
     "Data de preferência",
   ];
+
   return (
     <div>
       {step > 1 && step < 6 && (
@@ -136,14 +141,9 @@ const Page = (data) => {
         />
       )}
       {step === 5 && (
-        <Step5
-          onPrevious={handlePreviousStep}
-          setFormData={setFormData}
-          handleSubmit={handleSubmit}
-          formData={formData}
-        />
+        <Step5 onPrevious={handlePreviousStep} setFormData={setFormData} onNext={handleNextStep} />
       )}
-      {step === 6 && <Step6 onPrevious={handlePreviousStep} onNext={handleNextStep} />}
+      {step === 6 && <Step6 onNext={handleNextStep} onPrevious={handlePreviousStep} />}
       {step === 7 && <Step7 onPrevious={handlePreviousStep} onNext={handleNextStep} />}
     </div>
   );
