@@ -28,7 +28,6 @@ const Page = () => {
           const response = await axios.get(apiUrl, config);
           setFormData(response.data);
           setLoading(false);
-          console.log(response.data);
         } else {
           console.error("Nenhum usuário autenticado encontrado.");
         }

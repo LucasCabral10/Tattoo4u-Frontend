@@ -27,7 +27,7 @@ export const items = [
   },
   {
     title: "Respostas",
-    path: "/companies",
+    path: "/response",
     icon: (
       <SvgIcon fontSize="small">
         <ShoppingBagIcon />

@@ -1,156 +1,157 @@
-import PropTypes from 'prop-types';
-import { format } from 'date-fns';
 import {
-  Avatar,
   Box,
+  Button,
   Card,
   Checkbox,
+  Chip,
+  Divider,
+  Grid,
+  IconButton,
   Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
-  Typography
-} from '@mui/material';
-import { Scrollbar } from 'src/components/scrollbar';
-import { getInitials } from 'src/utils/get-initials';
+  Typography,
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { useState } from "react";
+import { neutral } from "src/theme/colors";
+import { indigo } from "src/theme/colors";
+import { motion } from "framer-motion";
+import TagFacesIcon from "@mui/icons-material/TagFaces";
+import SendIcon from "@mui/icons-material/Send";
 
-export const CustomersTable = (props) => {
-  const {
-    count = 0,
-    items = [],
-    onDeselectAll,
-    onDeselectOne,
-    onPageChange = () => {},
-    onRowsPerPageChange,
-    onSelectAll,
-    onSelectOne,
-    page = 0,
-    rowsPerPage = 0,
-    selected = []
-  } = props;
+function CustomerInfo({ title, info }) {
+  return (
+    <Stack direction="column" width="100%">
+      <Typography variant="subtitle1">{title}</Typography>
+      <Typography variant="body1" sx={{ wordWrap: "break-word" }}>
+        {info}
+      </Typography>
+      <Divider sx={{ mt: 1 }} />
+    </Stack>
+  );
+}
 
-  const selectedSome = (selected.length > 0) && (selected.length < items.length);
-  const selectedAll = (items.length > 0) && (selected.length === items.length);
+//TODO: FILTROS E SELECTS, PESQUISA, PAGINAÇÃO, STATUS, ETC
+export const RespostasTable = (props) => {
+  const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState([]);
 
   return (
-    <Card>
-      <Scrollbar>
-        <Box sx={{ minWidth: 800 }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={selectedAll}
-                    indeterminate={selectedSome}
-                    onChange={(event) => {
-                      if (event.target.checked) {
-                        onSelectAll?.();
-                      } else {
-                        onDeselectAll?.();
-                      }
+    <Card
+      component={motion.div} // Add motion animation
+      initial={{ height: "100%" }}
+      animate={{ height: open ? "100%" : "auto" }}
+      transition={{ duration: 0.5, ease: "easeInOut" }}
+      sx={{
+        bgcolor: open ? indigo.lightest : "white",
+        overflow: "hidden",
+      }}
+    >
+      <Box sx={{ p: 2 }}>
+        <Grid container>
+          <Grid xs={2} display="flex" alignItems="center">
+            <Checkbox
+              onChange={(event) => {
+                if (event.target.checked) {
+                  setSelected((prevSelected) => [...prevSelected, props.customer.id]); // Adiciona o Id da resposta na lista
+                } else {
+                  setSelected(
+                    (prevSelected) => prevSelected.filter((item) => item !== props.customer.id) // Retira o Id da resposta na lista
+                  );
+                }
+              }}
+            />
+          </Grid>
+          <Grid xs={10}>
+            <Box onClick={() => setOpen((prevOpen) => !prevOpen)}>
+              <Stack
+                direction="row"
+                spacing={2}
+                alignItems="center"
+                justifyContent={"space-between"}
+              >
+                <Typography variant="h6">{props.customer.client_name}</Typography>
+                <Stack direction="row" spacing={2} alignItems="center">
+                  <Chip color="success" size="small" icon={<TagFacesIcon />} label="Novo" />
+                  <IconButton
+                    component={motion.div}
+                    initial={{ rotate: 0 }}
+                    animate={{ rotate: open ? 180 : 0 }}
+                    transition={{ duration: 0.5 }}
+                    aria-label="edit"
+                    size="large"
+                    color="gray"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setOpen((prevOpen) => !prevOpen);
                     }}
-                  />
-                </TableCell>
-                <TableCell>
-                  Name
-                </TableCell>
-                <TableCell>
-                  Email
-                </TableCell>
-                <TableCell>
-                  Location
-                </TableCell>
-                <TableCell>
-                  Phone
-                </TableCell>
-                <TableCell>
-                  Signed Up
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {items.map((customer) => {
-                const isSelected = selected.includes(customer.id);
-                const createdAt = format(customer.createdAt, 'dd/MM/yyyy');
-
-                return (
-                  <TableRow
-                    hover
-                    key={customer.id}
-                    selected={isSelected}
                   >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        checked={isSelected}
-                        onChange={(event) => {
-                          if (event.target.checked) {
-                            onSelectOne?.(customer.id);
-                          } else {
-                            onDeselectOne?.(customer.id);
-                          }
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Stack
-                        alignItems="center"
-                        direction="row"
-                        spacing={2}
-                      >
-                        <Avatar src={customer.avatar}>
-                          {getInitials(customer.name)}
-                        </Avatar>
-                        <Typography variant="subtitle2">
-                          {customer.name}
-                        </Typography>
-                      </Stack>
-                    </TableCell>
-                    <TableCell>
-                      {customer.email}
-                    </TableCell>
-                    <TableCell>
-                      {customer.address.city}, {customer.address.state}, {customer.address.country}
-                    </TableCell>
-                    <TableCell>
-                      {customer.phone}
-                    </TableCell>
-                    <TableCell>
-                      {createdAt}
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </Box>
-      </Scrollbar>
-      <TablePagination
-        component="div"
-        count={count}
-        onPageChange={onPageChange}
-        onRowsPerPageChange={onRowsPerPageChange}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        rowsPerPageOptions={[5, 10, 25]}
-      />
+                    <KeyboardArrowDownIcon />
+                  </IconButton>
+                </Stack>
+              </Stack>
+            </Box>
+          </Grid>
+        </Grid>
+        {open && (
+          <Card sx={{ bgcolor: neutral.lightest, p: 2, mt: 2 }}>
+            <Stack direction="column" spacing={1}>
+              <CustomerInfo title="Ideia da tatuagem:" info={props.customer.Ideia_Tattoo} />
+              <CustomerInfo title="Telefone:" info={props.customer.client_phone} />
+              <CustomerInfo title="Nome:" info={props.customer.client_name} />
+              <CustomerInfo title="Data de nascimento:" info={props.customer.Client_BornDate} />
+              <CustomerInfo title="Cidade:" info={props.customer.Client_city} />
+              <CustomerInfo title="Estado:" info={props.customer.Client_state} />
+              <CustomerInfo title="Local da tatuagem:" info={props.customer.Place_Tattoo} />
+              <CustomerInfo title="Tamanho da tatuagem:" info={props.customer.Size_Tattoo} />
+              <CustomerInfo title="Data de preferência:" info={props.customer.Preference_Date} />
+              <Stack direction="column" spacing={2} width={"100%"}>
+                {props.customer.Ref_Tattoo.length > 0 && (
+                  <>
+                    <Typography variant="subtitle1">Imagens de referência:</Typography>
+                    <Stack direction="row" spacing={2}>
+                      {props.customer.Ref_Tattoo.map((link, linkIndex) => (
+                        <>
+                          <Box
+                            sx={{
+                              bgcolor: neutral[100],
+                              width: 100,
+                              p: 1,
+                              borderRadius: 1,
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                          >
+                            <img width={"100%"} key={linkIndex} src={link} alt="Tattoo" />
+                          </Box>
+                        </>
+                      ))}
+                    </Stack>
+                  </>
+                )}
+              </Stack>
+              <Stack direction="row-reverse" spacing={2} mt={2}>
+                <Button
+                  variant="contained"
+                  endIcon={<SendIcon />}
+                  href="https://wa.me//5565993269490?text=Tenho%20interesse%20em%20comprar%20seu%20carro"
+                  target="_blank"
+                >
+                  Contato
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="error"
+                  startIcon={<DeleteIcon />}
+                  onClick={() => props.handleDelete(props.customer.id)}
+                >
+                  Excluir
+                </Button>
+              </Stack>
+            </Stack>
+          </Card>
+        )}
+      </Box>
     </Card>
   );
-};
-
-CustomersTable.propTypes = {
-  count: PropTypes.number,
-  items: PropTypes.array,
-  onDeselectAll: PropTypes.func,
-  onDeselectOne: PropTypes.func,
-  onPageChange: PropTypes.func,
-  onRowsPerPageChange: PropTypes.func,
-  onSelectAll: PropTypes.func,
-  onSelectOne: PropTypes.func,
-  page: PropTypes.number,
-  rowsPerPage: PropTypes.number,
-  selected: PropTypes.array
 };
