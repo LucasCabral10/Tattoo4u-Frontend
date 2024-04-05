@@ -38,6 +38,7 @@ const Page = (data) => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     formId: data.id,
+    userId: data.userId,
   });
 
   const { changeTheme } = useContext(ThemesShareFormContext);
@@ -88,7 +89,11 @@ const Page = (data) => {
     };
 
     try {
-      const response = await axios.post("http://localhost:3333/api/shared/", data, config);
+      const response = await axios.post(
+        "https://backend-4u-backend.fwhe6r.easypanel.host/api/shared/",
+        data,
+        config
+      );
       console.log(response);
     } catch (error) {
       console.log(error);

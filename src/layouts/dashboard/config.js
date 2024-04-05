@@ -5,6 +5,7 @@ import UserIcon from "@heroicons/react/24/solid/UserIcon";
 import UsersIcon from "@heroicons/react/24/solid/UsersIcon";
 import { SvgIcon } from "@mui/material";
 import FolderMinus from "@heroicons/react/24/solid/FolderMinusIcon";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
 export const items = [
   {
@@ -58,6 +59,15 @@ export const items = [
     icon: (
       <SvgIcon fontSize="small">
         <FolderMinus />
+      </SvgIcon>
+    ),
+  },
+  {
+    title: "Agenda",
+    path: "/calendar",
+    icon: (
+      <SvgIcon fontSize="small">
+        <CalendarMonthIcon />
       </SvgIcon>
     ),
   },

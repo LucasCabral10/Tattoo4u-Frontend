@@ -3,7 +3,7 @@ import { Box, Container, Stack } from "@mui/system";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { FormComponent1 } from "src/sections/Forms/formComponent1";
 import { FormComponent2 } from "src/sections/Forms/formComponent2";
@@ -17,7 +17,6 @@ const Page = () => {
   const userId = session.id;
   const route = useRouter();
   const [formIndex, setFormIndex] = useState(1);
-  const [fileInput, setFileInput] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
     userId: userId,
@@ -59,7 +58,11 @@ const Page = () => {
           Authorization: `Bearer ${token}`,
         },
       };
-      const response = await axios.post("http://localhost:3333/api/form", formData, config);
+      const response = await axios.post(
+        "https://backend-4u-backend.fwhe6r.easypanel.host/api/form",
+        formData,
+        config
+      );
 
       route.push("/form");
       console.log("Formulário criado com sucesso:", response);

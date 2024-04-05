@@ -20,7 +20,7 @@ const Page = () => {
 
     const fetchForms = async () => {
       const response = await axios.get(
-        `http://localhost:3333/api/shared/allconsult/${session.id}`,
+        `https://backend-4u-backend.fwhe6r.easypanel.host/api/shared/allconsult/${session.id}`,
         config
       );
       setCustomer(response.data);
@@ -36,7 +36,10 @@ const Page = () => {
       },
     };
 
-    await axios.delete(`http://localhost:3333/api/shared/delete/${id}`, config);
+    await axios.delete(
+      `https://backend-4u-backend.fwhe6r.easypanel.host/api/shared/delete/${id}`,
+      config
+    );
     setCustomer(customer.filter((customer) => customer.id !== id));
   };
 

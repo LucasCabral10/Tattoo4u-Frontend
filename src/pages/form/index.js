@@ -19,7 +19,7 @@ const Page = () => {
     const fetchData = async () => {
       try {
         if (token && userId) {
-          const apiUrl = `https://tattoo4ubackend.onrender.com/api/form/allconsult/${userId}`;
+          const apiUrl = `https://backend-4u-backend.fwhe6r.easypanel.host/api/form/allconsult/${userId}`;
           const config = {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -54,25 +54,17 @@ const Page = () => {
           py: 8,
         }}
       >
-        <Container maxWidth="lg">
+        <Container maxWidth="xl">
           <Stack spacing={3}>
-            <Grid container spacing={2}>
-              <Grid xs={4}>
-                <div>
-                  <Typography variant="h4">Seus Formulários</Typography>
-                </div>
-              </Grid>
-              <Grid xs={8} container justifyContent="flex-end" spacing={2}>
-                <Grid item>
-                  <Button variant="outlined">Aparencia</Button>
-                </Grid>
-                <Grid item>
-                  <Button variant="contained" onClick={onClickHandler}>
-                    Adicionar Formulário
-                  </Button>
-                </Grid>
-              </Grid>
-            </Grid>
+            <Stack direction="row" justifyContent="space-between">
+              <Typography variant="h4">Seus Formulários</Typography>
+              <Stack direction="row" spacing={2}>
+                <Button variant="outlined">Aparencia</Button>
+                <Button variant="contained" onClick={onClickHandler}>
+                  Adicionar Formulário
+                </Button>
+              </Stack>
+            </Stack>
             <div>
               {formData === null ? (
                 <LoadingForm />

@@ -16,10 +16,13 @@ export const authOptions = {
         const { email, password } = credentials;
 
         try {
-          const response = await axios.post("https://tattoo4ubackend.onrender.com/users/login", {
-            email,
-            password,
-          });
+          const response = await axios.post(
+            "https://backend-4u-backend.fwhe6r.easypanel.host/users/login",
+            {
+              email,
+              password,
+            }
+          );
 
           if (response.status === 200 && response.data) {
             const { user = {}, token } = response.data;
@@ -49,11 +52,14 @@ export const authOptions = {
         const { name, email, password } = credentials;
 
         try {
-          const response = await axios.post("https://tattoo4ubackend.onrender.com/users/", {
-            name,
-            email,
-            password,
-          });
+          const response = await axios.post(
+            "https://backend-4u-backend.fwhe6r.easypanel.host/users/",
+            {
+              name,
+              email,
+              password,
+            }
+          );
 
           if (response.status === 200 && response.data) {
             return null;
