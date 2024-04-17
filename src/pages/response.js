@@ -4,42 +4,23 @@ import { Box, Button, Container, Stack, Typography } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { RespostasSearch } from "src/sections/respostas/respostas-search";
 import { RespostasTable } from "src/sections/respostas/respostas-table";
-import axios from "axios";
 import { useSession } from "next-auth/react";
+import { sharedConsult, sharedDelete } from "./routes";
 
 const Page = () => {
   const { data: session } = useSession();
   const [customer, setCustomer] = useState([]);
 
   useEffect(() => {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${session.accessToken}`,
-      },
+    const fetchData = async () => {
+      const data = await sharedConsult(session);
+      setCustomer(data);
     };
-
-    const fetchForms = async () => {
-      const response = await axios.get(
-        `https://backend-4u-backend.fwhe6r.easypanel.host/api/shared/allconsult/${session.id}`,
-        config
-      );
-      setCustomer(response.data);
-    };
-
-    fetchForms();
+    fetchData();
   }, []);
 
   const handleDelete = async (id) => {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${session.accessToken}`,
-      },
-    };
-
-    await axios.delete(
-      `https://backend-4u-backend.fwhe6r.easypanel.host/api/shared/delete/${id}`,
-      config
-    );
+    sharedDelete(session, id);
     setCustomer(customer.filter((customer) => customer.id !== id));
   };
 

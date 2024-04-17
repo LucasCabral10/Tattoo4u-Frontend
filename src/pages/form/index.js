@@ -15,6 +15,7 @@ const Page = () => {
   const userId = session.id;
   const [loading, setLoading] = useState(false); // muda para true quando deleta
 
+  //TODO: REFATORAR A REQUISIÇÃO PARA ROUTES
   useEffect(() => {
     const fetchData = async () => {
       try {
