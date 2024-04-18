@@ -1,4 +1,4 @@
-import { Card, CardContent, Grid, IconButton, Typography } from "@mui/material";
+import { Button, Card, CardContent, Grid, IconButton, Typography } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import { indigo, neutral, success } from "src/theme/colors";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
@@ -11,6 +11,7 @@ import { DatePicker } from "@mui/x-date-pickers";
 
 export const CalendarList = (props) => {
   const [selectedDate, setSelectedDate] = useState(null);
+  const [allDate, setAllDate] = useState(false);
 
   // Função para formatar a data no formato dd/MM e especificar o dia correspondente
   const formatDate = (date) => {
@@ -33,13 +34,26 @@ export const CalendarList = (props) => {
   const filteredCalendar = props.calendar.filter((item) => {
     const itemDate = new Date(item.Preference_Date);
     const today = new Date();
+    // Defina o horário de hoje para 00:00:00 para incluir compromissos de hoje
+    today.setHours(0, 0, 0, 0);
+    // Defina o horário do item para 00:00:00 para comparar com o horário de hoje
+    itemDate.setHours(0, 0, 0, 0);
     return itemDate >= today;
   });
 
-  // Ordenar os dados filtrados por data
-  const sortedCalendar = filteredCalendar.sort(
-    (a, b) => new Date(a.Preference_Date) - new Date(b.Preference_Date)
-  );
+  // Ordena os itens por sequência de datas
+  let sortedCalendar;
+  if (allDate === false) {
+    // Se allDate for true, ordenar todos os compromissos filtrados
+    sortedCalendar = filteredCalendar.sort(
+      (a, b) => new Date(a.Preference_Date) - new Date(b.Preference_Date)
+    );
+  } else {
+    // Se allDate for false, ordenar todos os compromissos da props.calendar
+    sortedCalendar = props.calendar.sort(
+      (a, b) => new Date(a.Preference_Date) - new Date(b.Preference_Date)
+    );
+  }
 
   // Agrupar os dados por data
   const groupedCalendar = sortedCalendar.reduce((acc, curr) => {
@@ -53,6 +67,11 @@ export const CalendarList = (props) => {
 
   const handleDateChange = (date) => {
     setSelectedDate(formatDate(date));
+  };
+
+  const handleAllDateChange = () => {
+    setAllDate(!allDate); // Inverte o valor atual de allDate
+    console.log(allDate);
   };
 
   const renderDays = () => {
@@ -131,6 +150,9 @@ export const CalendarList = (props) => {
     <>
       <Card>
         <CardContent>
+          <Button variant="text" onClick={handleAllDateChange}>
+            Ver agendas antigas
+          </Button>
           <DatePicker selected={selectedDate} onChange={handleDateChange} />
           <Stack direction="column" spacing={2}>
             {renderDays()}
