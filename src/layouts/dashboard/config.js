@@ -18,11 +18,11 @@ export const items = [
     ),
   },
   {
-    title: "Customers",
-    path: "/customers",
+    title: "Formulário",
+    path: "/form",
     icon: (
       <SvgIcon fontSize="small">
-        <UsersIcon />
+        <FolderMinus />
       </SvgIcon>
     ),
   },
@@ -32,6 +32,24 @@ export const items = [
     icon: (
       <SvgIcon fontSize="small">
         <ShoppingBagIcon />
+      </SvgIcon>
+    ),
+  },
+  {
+    title: "Agenda",
+    path: "/calendar",
+    icon: (
+      <SvgIcon fontSize="small">
+        <CalendarMonthIcon />
+      </SvgIcon>
+    ),
+  },
+  {
+    title: "Customers",
+    path: "/customers",
+    icon: (
+      <SvgIcon fontSize="small">
+        <UsersIcon />
       </SvgIcon>
     ),
   },
@@ -50,24 +68,6 @@ export const items = [
     icon: (
       <SvgIcon fontSize="small">
         <CogIcon />
-      </SvgIcon>
-    ),
-  },
-  {
-    title: "Formulário",
-    path: "/form",
-    icon: (
-      <SvgIcon fontSize="small">
-        <FolderMinus />
-      </SvgIcon>
-    ),
-  },
-  {
-    title: "Agenda",
-    path: "/calendar",
-    icon: (
-      <SvgIcon fontSize="small">
-        <CalendarMonthIcon />
       </SvgIcon>
     ),
   },
