@@ -17,7 +17,7 @@ export const authOptions = {
 
         try {
           const response = await axios.post(
-            "https://backend-4u-backend.fwhe6r.easypanel.host/users/login",
+            "https://backend-backend.fwhe6r.easypanel.host/users/login",
             {
               email,
               password,
@@ -53,7 +53,7 @@ export const authOptions = {
 
         try {
           const response = await axios.post(
-            "https://backend-4u-backend.fwhe6r.easypanel.host/users/",
+            "https://backend-backend.fwhe6r.easypanel.host/users/",
             {
               name,
               email,

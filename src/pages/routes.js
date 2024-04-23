@@ -1,7 +1,7 @@
 import axios from "axios";
 
 //Trocar todos endereços de uma vez
-const linkApi = "https://backend-4u-backend.fwhe6r.easypanel.host/api";
+const linkApi = "https://backend-backend.fwhe6r.easypanel.host/api";
 
 export default async function formConsult(id) {
   try {

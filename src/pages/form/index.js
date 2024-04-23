@@ -20,7 +20,7 @@ const Page = () => {
     const fetchData = async () => {
       try {
         if (token && userId) {
-          const apiUrl = `https://backend-4u-backend.fwhe6r.easypanel.host/api/form/allconsult/${userId}`;
+          const apiUrl = `https://backend-backend.fwhe6r.easypanel.host/api/form/allconsult/${userId}`;
           const config = {
             headers: {
               Authorization: `Bearer ${token}`,

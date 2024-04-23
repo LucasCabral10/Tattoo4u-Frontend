@@ -6,10 +6,11 @@ import { RespostasSearch } from "src/sections/respostas/respostas-search";
 import { RespostasTable } from "src/sections/respostas/respostas-table";
 import { useSession } from "next-auth/react";
 import { sharedConsult, sharedDelete } from "./routes";
+import { LoadingForm } from "src/sections/Forms/LoadingForm";
 
 const Page = () => {
   const { data: session } = useSession();
-  const [customer, setCustomer] = useState([]);
+  const [customer, setCustomer] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,15 +42,9 @@ const Page = () => {
             <Typography variant="h4">Respostas</Typography>
             <RespostasSearch />
             <Stack spacing={1.5}>
-              {customer.length > 0 ? (
-                customer.map((customer) => (
-                  <RespostasTable
-                    key={customer.id}
-                    customer={customer}
-                    handleDelete={handleDelete}
-                  />
-                ))
-              ) : (
+              {customer === null ? (
+                <LoadingForm />
+              ) : customer.length === 0 ? (
                 <Stack display="flex" alignItems="center">
                   <Typography variant="subtitle1">Nenhuma resposta encontrada</Typography>
                   <Typography variant="subtitle2" textAlign="center">
@@ -59,6 +54,14 @@ const Page = () => {
                     Criar um formulário
                   </Button>
                 </Stack>
+              ) : (
+                customer.map((customer) => (
+                  <RespostasTable
+                    key={customer.id}
+                    customer={customer}
+                    handleDelete={handleDelete}
+                  />
+                ))
               )}
             </Stack>
           </Stack>

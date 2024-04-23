@@ -41,7 +41,9 @@ const Page = () => {
                 {customer === null ? (
                   <LoadingForm />
                 ) : customer.length === 0 ? (
-                  <Typography variant="h4">Crie seu primeiro formulário</Typography>
+                  <Typography variant="h4">
+                    Você não tem nenhuma compromisso em sua agenda.
+                  </Typography>
                 ) : (
                   <CalendarList calendar={customer} />
                 )}
