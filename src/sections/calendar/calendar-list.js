@@ -35,7 +35,7 @@ export const CalendarList = (props) => {
 
   // Filtrar inicialmente compromissos a partir da data atual
   const filteredCalendar = props.calendar.filter((item) => {
-    const itemDate = new Date(item.Preference_Date);
+    const itemDate = new Date(item.Schedule);
     const today = new Date();
     // Defina o horário de hoje para 00:00:00 para incluir compromissos de hoje
     today.setHours(0, 0, 0, 0);
@@ -48,19 +48,15 @@ export const CalendarList = (props) => {
   let sortedCalendar;
   if (allDate === false) {
     // Se allDate for true, ordenar todos os compromissos filtrados
-    sortedCalendar = filteredCalendar.sort(
-      (a, b) => new Date(a.Preference_Date) - new Date(b.Preference_Date)
-    );
+    sortedCalendar = filteredCalendar.sort((a, b) => new Date(a.Schedule) - new Date(b.Schedule));
   } else {
     // Se allDate for false, ordenar todos os compromissos da props.calendar
-    sortedCalendar = props.calendar.sort(
-      (a, b) => new Date(a.Preference_Date) - new Date(b.Preference_Date)
-    );
+    sortedCalendar = props.calendar.sort((a, b) => new Date(a.Schedule) - new Date(b.Schedule));
   }
 
   // Agrupar os dados por data
   const groupedCalendar = sortedCalendar.reduce((acc, curr) => {
-    const formattedDate = formatDate(new Date(curr.Preference_Date));
+    const formattedDate = formatDate(new Date(curr.Schedule));
     if (!acc[formattedDate]) {
       acc[formattedDate] = [];
     }

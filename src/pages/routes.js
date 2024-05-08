@@ -2,6 +2,7 @@ import axios from "axios";
 
 //Trocar todos endereços de uma vez
 const linkApi = "https://backend-backend.fwhe6r.easypanel.host/api";
+//const linkApi = "http://localhost:3333/api";
 
 export default async function formConsult(id) {
   try {
@@ -17,7 +18,7 @@ export default async function formConsult(id) {
   }
 }
 
-export async function sharedConsult(session) {
+export async function sharedConsult(session, limit, offset) {
   try {
     const config = {
       headers: {
@@ -40,4 +41,13 @@ export async function sharedDelete(session, id) {
     },
   };
   await axios.delete(`${linkApi}/shared/delete/${id}`, config);
+}
+
+export async function sharedSchedule(session, id, Schedule) {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${session.accessToken}`,
+    },
+  };
+  await axios.put(`${linkApi}/shared/update/${id}`, Schedule, config);
 }

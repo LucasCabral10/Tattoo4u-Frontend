@@ -29,7 +29,7 @@ export const RenderDays = (props) => {
       sx={{
         mt: 2,
         p: 2,
-        bgcolor: props.isToday(item.Preference_Date) ? indigo.main : neutral[100],
+        bgcolor: props.isToday(item.Schedule) ? indigo.main : neutral[100],
         borderRadius: 1,
       }}
     >
@@ -37,7 +37,7 @@ export const RenderDays = (props) => {
         <Grid item xl={1} xs={2} display="flex" alignItems="center">
           <Typography
             variant="subtitle1"
-            sx={{ color: props.isToday(item.Preference_Date) ? "#fff " : "#000" }}
+            sx={{ color: props.isToday(item.Schedule) ? "#fff " : "#000" }}
           >
             13:00
           </Typography>
@@ -45,7 +45,7 @@ export const RenderDays = (props) => {
         <Grid item xl={6} xs={9} display="flex" alignItems="center">
           <Typography
             variant="body1"
-            sx={{ color: props.isToday(item.Preference_Date) ? "#fff " : "#000" }}
+            sx={{ color: props.isToday(item.Schedule) ? "#fff " : "#000" }}
           >
             {item.client_name}{" "}
           </Typography>
@@ -57,8 +57,8 @@ export const RenderDays = (props) => {
                 variant="contained"
                 color="error"
                 sx={{
-                  color: (theme) => (props.isToday(item.Preference_Date) ? error.main : "#fff"),
-                  bgcolor: (theme) => (props.isToday(item.Preference_Date) ? "#fff" : error.main),
+                  color: (theme) => (props.isToday(item.Schedule) ? error.main : "#fff"),
+                  bgcolor: (theme) => (props.isToday(item.Schedule) ? "#fff" : error.main),
                   "&:hover": {
                     bgcolor: indigo[700],
                     color: "#fff",
@@ -70,8 +70,8 @@ export const RenderDays = (props) => {
               <Button
                 variant="contained"
                 sx={{
-                  color: (theme) => (props.isToday(item.Preference_Date) ? indigo.dark : "#fff"),
-                  bgcolor: (theme) => (props.isToday(item.Preference_Date) ? "#fff" : indigo),
+                  color: (theme) => (props.isToday(item.Schedule) ? indigo.dark : "#fff"),
+                  bgcolor: (theme) => (props.isToday(item.Schedule) ? "#fff" : indigo),
                   "&:hover": {
                     bgcolor: indigo[700],
                     color: "#fff",
@@ -87,8 +87,8 @@ export const RenderDays = (props) => {
                 href="https://wa.me//5565993269490?text=Tenho%20interesse%20em%20comprar%20seu%20carro"
                 target="_blank"
                 sx={{
-                  color: (theme) => (props.isToday(item.Preference_Date) ? success.main : "#fff"),
-                  bgcolor: (theme) => (props.isToday(item.Preference_Date) ? "#fff" : indigo),
+                  color: (theme) => (props.isToday(item.Schedule) ? success.main : "#fff"),
+                  bgcolor: (theme) => (props.isToday(item.Schedule) ? "#fff" : indigo),
                   "&:hover": {
                     bgcolor: indigo[700],
                     color: "#fff",
@@ -102,7 +102,7 @@ export const RenderDays = (props) => {
             <Stack direction={"row-reverse"}>
               <IconButton
                 sx={{
-                  color: (theme) => (props.isToday(item.Preference_Date) ? "#fff" : indigo.dark),
+                  color: (theme) => (props.isToday(item.Schedule) ? "#fff" : indigo.dark),
                 }}
                 id="basic-button"
                 aria-controls={open ? "basic-menu" : undefined}
@@ -165,9 +165,7 @@ export const RenderDays = (props) => {
     const days = Object.entries(props.groupedCalendar).map(([date, data]) => (
       <div key={date}>
         <Typography variant="h6" sx={{ marginTop: 2 }}>
-          {props.isToday(data[0].Preference_Date) && (
-            <span style={{ color: neutral }}>HOJE - </span>
-          )}
+          {props.isToday(data[0].Schedule) && <span style={{ color: neutral }}>HOJE - </span>}
           {date}
         </Typography>
         {data.map(renderAppointment)}

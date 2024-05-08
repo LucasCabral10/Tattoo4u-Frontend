@@ -11,6 +11,7 @@ import { createEmotionCache } from "src/utils/create-emotion-cache";
 import "simplebar-react/dist/simplebar.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
+import "react-toastify/dist/ReactToastify.css";
 import AuthGuard from "src/guards/auth-guard";
 import { ThemeProviderShared } from "src/sections/shared/context/themeContext";
 

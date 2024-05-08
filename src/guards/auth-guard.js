@@ -35,7 +35,6 @@ const AuthGuard = ({ children }) => {
             config
           );
           if (response.status === 200) {
-            console.log("rep:", response);
             return;
           }
         } catch (error) {
@@ -60,7 +59,6 @@ const AuthGuard = ({ children }) => {
       router.pathname !== "/auth/register" &&
       router.pathname !== "/shared/[id]")
   ) {
-    console.log(session);
     return null;
   }
 

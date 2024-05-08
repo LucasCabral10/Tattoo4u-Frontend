@@ -4,10 +4,8 @@ import {
   Card,
   Checkbox,
   Chip,
-  Divider,
   Grid,
   IconButton,
-  Modal,
   Stack,
   Typography,
 } from "@mui/material";
@@ -20,77 +18,59 @@ import { motion } from "framer-motion";
 import TagFacesIcon from "@mui/icons-material/TagFaces";
 import SendIcon from "@mui/icons-material/Send";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import { DatePicker, TimePicker } from "@mui/x-date-pickers";
-
-//TODO: FILTROS
-//TODO: STATUS DINÂMICO
-//TODO: PAGINAÇÃO
-//TODO: SELECT
-
-function CustomerInfo({ title, info }) {
-  return (
-    <Stack direction="column" width="100%">
-      <Typography variant="subtitle1">{title}</Typography>
-      <Typography variant="body1" sx={{ wordWrap: "break-word" }}>
-        {info}
-      </Typography>
-      <Divider sx={{ mt: 1 }} />
-    </Stack>
-  );
-}
+import { sharedSchedule } from "src/pages/routes";
+import ModalCalendar from "./modal-calendar";
+import ModalDelete from "./modal-delete";
+import CustomerInfo from "./custumer-info";
 
 export const RespostasTable = (props) => {
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
+  const [modalDeleteOpen, setModalDeleteOpen] = useState(false);
 
-  const ModalCalendar = () => {
-    return (
-      <Modal open={modalOpen}>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100%",
-            width: "100%",
-          }}
-        >
-          <Card sx={{ p: 3 }}>
-            <Stack spacing={3} direction={"column"}>
-              <Typography variant="h6">Escolha a data e horário da sessão</Typography>
-              <DatePicker
-                label="Dia da sessão"
-                //selected={selectedDate}
-                //value={valueDate}
-                //onChange={handleDateChange}
-              />
-              <TimePicker label="Horário da sessão" />
-              <Stack spacing={1} direction={"row-reverse"}>
-                <Button variant="contained" color="success">
-                  Marcar sessão
-                </Button>
-                <Button variant="contained" color="error" onClick={() => handleModalClose()}>
-                  Cancelar
-                </Button>
-              </Stack>
-            </Stack>
-          </Card>
-        </Box>
-      </Modal>
-    );
-  };
-  const handleModalOpen = () => {
-    setModalOpen(true);
-  };
-  const handleModalClose = () => {
-    setModalOpen(false);
+  const handleModalDeleteOpen = () => setModalDeleteOpen(true);
+  const handleModalDeleteClose = () => setModalDeleteOpen(false);
+  const handleModalOpen = () => setModalOpen(true);
+  const handleModalClose = () => setModalOpen(false);
+
+  const handleSaveSession = (date, time) => {
+    const selectedDate = date;
+    const selectedTime = time;
+
+    if (selectedDate && selectedTime) {
+      const sessionDateTime = new Date(selectedDate);
+      sessionDateTime.setHours(selectedTime.getHours(), selectedTime.getMinutes());
+      const formattedSessionDateTime = sessionDateTime.toISOString();
+
+      const scheduleData = {
+        Schedule: formattedSessionDateTime,
+      };
+
+      sharedSchedule(props.session, props.customer.id, scheduleData);
+
+      props.updateCustomer(props.customer.id, {
+        Schedule: formattedSessionDateTime,
+        Status: false,
+      });
+    } else {
+      console.error("Por favor, selecione data e horário da sessão");
+    }
   };
 
   return (
     <div>
-      <ModalCalendar isOpen={handleModalOpen} onClose={handleModalClose} />
-      <Card
+      <ModalDelete
+        open={modalDeleteOpen}
+        onClose={handleModalDeleteClose}
+        customer={props.customer}
+        handleDelete={props.handleDelete}
+      />
+      <ModalCalendar
+        open={modalOpen}
+        onClose={handleModalClose}
+        handleSaveSession={(date, time) => handleSaveSession(date, time)}
+      />
+      <Box
         component={motion.div} // Add motion animation
         initial={{ height: "100%" }}
         animate={{ height: open ? "100%" : "auto" }}
@@ -102,20 +82,24 @@ export const RespostasTable = (props) => {
       >
         <Box sx={{ p: 2 }}>
           <Grid container>
-            <Grid xs={2} display="flex" alignItems="center">
+            <Grid xs={0.6} display="flex" alignItems="center">
               <Checkbox
                 onChange={(event) => {
                   if (event.target.checked) {
-                    setSelected((prevSelected) => [...prevSelected, props.customer.id]); // Adiciona o Id da resposta na lista
+                    props.setSelected((prevSelected) => [...prevSelected, props.customer.id]); // Adiciona o Id da resposta na lista
                   } else {
-                    setSelected(
+                    props.setSelectAll(false);
+                    props.setSelected(
                       (prevSelected) => prevSelected.filter((item) => item !== props.customer.id) // Retira o Id da resposta na lista
                     );
                   }
                 }}
+                checked={
+                  props.selectAll ? props.selectAll : props.selected.includes(props.customer.id)
+                }
               />
             </Grid>
-            <Grid xs={10}>
+            <Grid xs={11.4}>
               <Box onClick={() => setOpen((prevOpen) => !prevOpen)}>
                 <Stack
                   direction="row"
@@ -125,7 +109,12 @@ export const RespostasTable = (props) => {
                 >
                   <Typography variant="h6">{props.customer.client_name}</Typography>
                   <Stack direction="row" spacing={2} alignItems="center">
-                    <Chip color="success" size="small" icon={<TagFacesIcon />} label="Novo" />
+                    {props.customer.Status && (
+                      <Chip color="success" size="small" icon={<TagFacesIcon />} label="Novo" />
+                    )}
+                    {props.customer.Schedule && (
+                      <Chip color="primary" size="small" icon={<TagFacesIcon />} label="Agendado" />
+                    )}
                     <IconButton
                       component={motion.div}
                       initial={{ rotate: 0 }}
@@ -192,18 +181,31 @@ export const RespostasTable = (props) => {
                   >
                     Contato
                   </Button>
-                  <Button
-                    variant="outlined"
-                    endIcon={<CalendarMonthIcon />}
-                    onClick={() => handleModalOpen()}
-                  >
-                    Marcar na agenda
-                  </Button>
+                  <div>
+                    {props.customer.Schedule ? (
+                      <Button
+                        variant="outlined"
+                        endIcon={<CalendarMonthIcon />}
+                        onClick={() => handleModalOpen()}
+                      >
+                        Remarcar
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="outlined"
+                        endIcon={<CalendarMonthIcon />}
+                        onClick={() => handleModalOpen()}
+                      >
+                        Marcar na agenda
+                      </Button>
+                    )}
+                  </div>
+
                   <Button
                     variant="outlined"
                     color="error"
                     startIcon={<DeleteIcon />}
-                    onClick={() => props.handleDelete(props.customer.id)}
+                    onClick={() => handleModalDeleteOpen()}
                   >
                     Excluir
                   </Button>
@@ -212,7 +214,7 @@ export const RespostasTable = (props) => {
             </Card>
           )}
         </Box>
-      </Card>
+      </Box>
     </div>
   );
 };
