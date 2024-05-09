@@ -12,6 +12,8 @@ const Page = () => {
   const { data: session } = useSession();
   const [customer, setCustomer] = useState(null);
 
+  const filteredData = customer ? customer.filter((item) => item.Schedule !== null) : null;
+
   useEffect(() => {
     const fetchData = async () => {
       const data = await sharedConsult(session);
@@ -19,6 +21,18 @@ const Page = () => {
     };
     fetchData();
   }, []);
+
+  const updateCustomer = (customerId, updatedData) => {
+    // Atualize os dados do cliente com o ID correspondente
+    setCustomer((prevCustomers) =>
+      prevCustomers.map((customer) =>
+        customer.id === customerId ? { ...customer, ...updatedData } : customer
+      )
+    );
+  };
+  const removeCustomer = (customerId) => {
+    setCustomer((prevCustomers) => prevCustomers.filter((customer) => customer.id !== customerId));
+  };
 
   return (
     <>
@@ -45,7 +59,15 @@ const Page = () => {
                     Você não tem nenhuma compromisso em sua agenda.
                   </Typography>
                 ) : (
-                  <CalendarList calendar={customer} />
+                  <>
+                    <CalendarList
+                      calendar={filteredData}
+                      session={session}
+                      updateCustomer={updateCustomer}
+                      removeCustomer={removeCustomer}
+                    />
+                    {console.log(filteredData)}
+                  </>
                 )}
               </div>
             </Stack>

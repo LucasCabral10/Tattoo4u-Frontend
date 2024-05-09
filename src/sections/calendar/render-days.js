@@ -8,10 +8,23 @@ import { useTheme } from "@mui/system";
 import { useMediaQuery } from "@mui/material";
 import EventIcon from "@mui/icons-material/Event";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ModalCalendar from "./modal-calendar";
+import ModalDesmarcar from "./modal-desmarcar";
 
 export const RenderDays = (props) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleModalOpen = (type, itemId) => {
+    if (type === "calendar") {
+      setModalOpen(`calendar_${itemId}`);
+    } else if (type === "desmarcar") {
+      setModalOpen(`desmarcar_${itemId}`);
+    }
+  };
+
+  const handleModalClose = () => setModalOpen(false);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -23,6 +36,12 @@ export const RenderDays = (props) => {
   const theme = useTheme();
   const isXl = useMediaQuery(theme.breakpoints.up("xl"));
 
+  const formatTimeIso = (timeISO) => {
+    const data = new Date(timeISO);
+    // Formato de hora desejado (por exemplo, HH:MM:SS)
+    return `${data.getHours()}:${data.getMinutes()}`;
+  };
+
   const renderAppointment = (item, index) => (
     <Box
       key={index}
@@ -33,13 +52,29 @@ export const RenderDays = (props) => {
         borderRadius: 1,
       }}
     >
+      <ModalCalendar
+        open={modalOpen === `calendar_${item.id}`}
+        onClose={handleModalClose}
+        item={item}
+        session={props.session}
+        updateCustomer={props.updateCustomer}
+      />
+
+      <ModalDesmarcar
+        open={modalOpen === `desmarcar_${item.id}`}
+        onClose={handleModalClose}
+        customer={item}
+        session={props.session}
+        removeCustomer={props.removeCustomer}
+      />
+
       <Grid container>
         <Grid item xl={1} xs={2} display="flex" alignItems="center">
           <Typography
             variant="subtitle1"
             sx={{ color: props.isToday(item.Schedule) ? "#fff " : "#000" }}
           >
-            13:00
+            {formatTimeIso(item.Schedule)}
           </Typography>
         </Grid>
         <Grid item xl={6} xs={9} display="flex" alignItems="center">
@@ -56,6 +91,7 @@ export const RenderDays = (props) => {
               <Button
                 variant="contained"
                 color="error"
+                type="desmarcar"
                 sx={{
                   color: (theme) => (props.isToday(item.Schedule) ? error.main : "#fff"),
                   bgcolor: (theme) => (props.isToday(item.Schedule) ? "#fff" : error.main),
@@ -64,6 +100,7 @@ export const RenderDays = (props) => {
                     color: "#fff",
                   },
                 }}
+                onClick={() => handleModalOpen("desmarcar", item.id)}
               >
                 Desmarcar
               </Button>
@@ -77,6 +114,7 @@ export const RenderDays = (props) => {
                     color: "#fff",
                   },
                 }}
+                onClick={() => handleModalOpen("calendar", item.id)}
               >
                 Mudar data
               </Button>
@@ -127,13 +165,13 @@ export const RenderDays = (props) => {
                   </ListItemIcon>
                   Contato
                 </MenuItem>
-                <MenuItem onClick={handleClose}>
+                <MenuItem onClick={() => handleModalOpen("calendar", item.id)}>
                   <ListItemIcon>
                     <EventIcon />
                   </ListItemIcon>
                   Mudar data
                 </MenuItem>
-                <MenuItem onClick={handleClose}>
+                <MenuItem onClick={() => handleModalOpen("desmarcar", item.id)}>
                   <ListItemIcon>
                     <DeleteIcon />
                   </ListItemIcon>

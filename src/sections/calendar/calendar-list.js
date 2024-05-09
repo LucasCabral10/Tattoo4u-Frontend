@@ -106,6 +106,10 @@ export const CalendarList = (props) => {
             groupedCalendar={groupedCalendar}
             selectedDate={selectedDate}
             isToday={isToday}
+            customer={props.calendar}
+            session={props.session}
+            updateCustomer={props.updateCustomer}
+            removeCustomer={props.removeCustomer}
           />
         </Stack>
       </CardContent>
